@@ -29,6 +29,7 @@ import DonutChart from '../../components/charts/DonutChart';
 import BarChart from '../../components/charts/BarChart';
 import { formatDate, countBy, downloadCSV, cn } from '../../utils/helpers';
 import { CHART_COLORS, DEPARTMENTS, EMPLOYEE_STATUSES } from '../../utils/constants';
+import SEO from '../../components/common/SEO';
 
 // Validation Schema
 const employeeSchema = z.object({
@@ -247,407 +248,413 @@ const Employees = () => {
     ];
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Employee Directory</h1>
-                    <p className="text-slate-500 mt-1">Manage your organization's workforce</p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Button variant="secondary" icon={HiOutlineDownload} onClick={handleExport}>
-                        Export
-                    </Button>
-                    <Button icon={HiOutlineUserAdd} onClick={() => handleOpenDrawer('add')}>
-                        Add Employee
-                    </Button>
-                </div>
-            </div>
-
-            {/* KPI Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-4">
-                    <p className="text-sm font-medium text-slate-500">Total Employees</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.total}</p>
-                </Card>
-                <Card className="p-4">
-                    <p className="text-sm font-medium text-slate-500">Active</p>
-                    <div className="flex items-end gap-2 mt-1">
-                        <p className="text-2xl font-bold text-slate-900">{stats.active}</p>
-                        <span className="text-sm font-medium text-green-600 bg-green-50 px-2 rounded-full mb-1">
-                            {stats.activePercent}%
-                        </span>
+        <>
+            <SEO
+                title="Employee Directory"
+                description="Browse and manage your organization's employee directory. View profiles, departments, and employment status."
+            />
+            <div className="space-y-6">
+                {/* Header */}
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-900">Employee Directory</h1>
+                        <p className="text-slate-500 mt-1">Manage your organization's workforce</p>
                     </div>
-                </Card>
-                <Card className="p-4">
-                    <p className="text-sm font-medium text-slate-500">Departments</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.departments}</p>
-                </Card>
-                <Card className="p-4">
-                    <p className="text-sm font-medium text-slate-500">On Leave</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{stats.onLeave}</p>
-                </Card>
-            </div>
+                    <div className="flex items-center gap-3">
+                        <Button variant="secondary" icon={HiOutlineDownload} onClick={handleExport}>
+                            Export
+                        </Button>
+                        <Button icon={HiOutlineUserAdd} onClick={() => handleOpenDrawer('add')}>
+                            Add Employee
+                        </Button>
+                    </div>
+                </div>
 
-            {/* Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <Card.Header>
-                        <Card.Title>Department Distribution</Card.Title>
-                    </Card.Header>
-                    <DonutChart
-                        series={chartData.deptSeries}
-                        labels={chartData.deptLabels}
-                        height={250}
-                    />
-                </Card>
-                <Card>
-                    <Card.Header>
-                        <Card.Title>Employment Status</Card.Title>
-                    </Card.Header>
-                    <BarChart
-                        series={chartData.statusSeries}
-                        categories={chartData.statusLabels}
-                        horizontal={true}
-                        height={250}
-                        colors={[CHART_COLORS.primary[5]]}
-                    />
-                </Card>
-            </div>
+                {/* KPI Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Card className="p-4">
+                        <p className="text-sm font-medium text-slate-500">Total Employees</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1">{stats.total}</p>
+                    </Card>
+                    <Card className="p-4">
+                        <p className="text-sm font-medium text-slate-500">Active</p>
+                        <div className="flex items-end gap-2 mt-1">
+                            <p className="text-2xl font-bold text-slate-900">{stats.active}</p>
+                            <span className="text-sm font-medium text-green-600 bg-green-50 px-2 rounded-full mb-1">
+                                {stats.activePercent}%
+                            </span>
+                        </div>
+                    </Card>
+                    <Card className="p-4">
+                        <p className="text-sm font-medium text-slate-500">Departments</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1">{stats.departments}</p>
+                    </Card>
+                    <Card className="p-4">
+                        <p className="text-sm font-medium text-slate-500">On Leave</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1">{stats.onLeave}</p>
+                    </Card>
+                </div>
 
-            {/* Filters and Search */}
-            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
-                <div className="flex items-center gap-4 w-full lg:w-auto">
-                    <div className="relative flex-1 lg:w-80">
-                        <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search by name, email, or ID..."
-                            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {/* Charts */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                        <Card.Header>
+                            <Card.Title>Department Distribution</Card.Title>
+                        </Card.Header>
+                        <DonutChart
+                            series={chartData.deptSeries}
+                            labels={chartData.deptLabels}
+                            height={250}
                         />
-                    </div>
+                    </Card>
+                    <Card>
+                        <Card.Header>
+                            <Card.Title>Employment Status</Card.Title>
+                        </Card.Header>
+                        <BarChart
+                            series={chartData.statusSeries}
+                            categories={chartData.statusLabels}
+                            horizontal={true}
+                            height={250}
+                            colors={[CHART_COLORS.primary[5]]}
+                        />
+                    </Card>
                 </div>
 
-                <div className="flex items-center gap-3 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                        <option value="All">All Status</option>
-                        {EMPLOYEE_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-
-                    <select
-                        value={deptFilter}
-                        onChange={(e) => setDeptFilter(e.target.value)}
-                        className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                        <option value="All">All Departments</option>
-                        {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
-                    </select>
-
-                    <div className="border-l border-slate-200 h-8 mx-1" />
-
-                    <div className="flex bg-slate-100 rounded-lg p-1">
-                        <button
-                            onClick={() => setViewMode('table')}
-                            className={cn(
-                                'p-1.5 rounded-md transition-all',
-                                viewMode === 'table' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'
-                            )}
-                        >
-                            <HiOutlineMenu className="w-5 h-5" />
-                        </button>
-                        <button
-                            onClick={() => setViewMode('grid')}
-                            className={cn(
-                                'p-1.5 rounded-md transition-all',
-                                viewMode === 'grid' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'
-                            )}
-                        >
-                            <HiOutlineViewGrid className="w-5 h-5" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Data Display */}
-            {viewMode === 'table' ? (
-                <Table
-                    columns={columns}
-                    data={filteredEmployees}
-                    onRowClick={(row) => handleOpenDrawer('view', row)}
-                    pagination
-                    pageSize={10}
-                    sortable
-                />
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredEmployees.map((emp) => (
-                        <Card
-                            key={emp.id}
-                            hover
-                            onClick={() => handleOpenDrawer('view', emp)}
-                            className="group cursor-pointer"
-                        >
-                            <div className="flex flex-col items-center text-center p-2">
-                                <Avatar name={emp.name} src={emp.avatar} size="xl" className="mb-4" />
-                                <h3 className="text-lg font-bold text-slate-900">{emp.name}</h3>
-                                <p className="text-sm text-slate-500 mb-2">{emp.designation}</p>
-                                <Badge className="mb-4">{emp.status}</Badge>
-
-                                <div className="w-full border-t border-slate-100 pt-4 flex flex-col gap-2 text-sm text-slate-600">
-                                    <div className="flex items-center justify-between w-full">
-                                        <span className="text-slate-400">Department</span>
-                                        <span className="font-medium">{emp.department}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between w-full">
-                                        <span className="text-slate-400">Joined</span>
-                                        <span className="font-medium">{formatDate(emp.joinDate)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-                    ))}
-                </div>
-            )}
-
-            {/* Slide-over Drawer */}
-            <Drawer
-                isOpen={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
-                title={
-                    drawerMode === 'add' ? 'Add New Employee' :
-                        drawerMode === 'edit' ? 'Edit Employee' :
-                            'Employee Profile'
-                }
-                size="lg"
-                footer={
-                    drawerMode === 'view' ? (
-                        <>
-                            <Button
-                                variant="danger"
-                                icon={HiOutlineTrash}
-                                onClick={handleDelete}
-                            >
-                                Remove Employee
-                            </Button>
-                            <Button
-                                icon={HiOutlinePencil}
-                                onClick={() => setDrawerMode('edit')}
-                            >
-                                Edit Profile
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Button variant="secondary" onClick={() => setDrawerOpen(false)}>
-                                Cancel
-                            </Button>
-                            <Button onClick={handleSubmit(onSubmit)}>
-                                {drawerMode === 'add' ? 'Add Employee' : 'Save Changes'}
-                            </Button>
-                        </>
-                    )
-                }
-            >
-                {drawerMode === 'view' && selectedEmployee ? (
-                    <div className="space-y-8">
-                        {/* Header Info */}
-                        <div className="flex items-center gap-4">
-                            <Avatar name={selectedEmployee.name} src={selectedEmployee.avatar} size="2xl" />
-                            <div>
-                                <h3 className="text-xl font-bold text-slate-900">{selectedEmployee.name}</h3>
-                                <p className="text-slate-500">{selectedEmployee.designation}</p>
-                                <div className="mt-2 text-sm text-slate-400">{selectedEmployee.id}</div>
-                            </div>
-                            <div className="ml-auto">
-                                <Badge size="lg">{selectedEmployee.status}</Badge>
-                            </div>
-                        </div>
-
-                        {/* Profile Sections */}
-                        <div className="space-y-6">
-                            <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">
-                                    Contact Information
-                                </h4>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs text-slate-500">Email Address</label>
-                                        <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
-                                            <HiOutlineMail className="w-4 h-4 text-slate-400" />
-                                            {selectedEmployee.email}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs text-slate-500">Phone Number</label>
-                                        <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
-                                            <HiOutlinePhone className="w-4 h-4 text-slate-400" />
-                                            {selectedEmployee.phone || '—'}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">
-                                    Employment Details
-                                </h4>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-xs text-slate-500">Department</label>
-                                        <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
-                                            <HiOutlineOfficeBuilding className="w-4 h-4 text-slate-400" />
-                                            {selectedEmployee.department}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs text-slate-500">Joining Date</label>
-                                        <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
-                                            <HiOutlineCalendar className="w-4 h-4 text-slate-400" />
-                                            {formatDate(selectedEmployee.joinDate)}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-xs text-slate-500">Employee ID</label>
-                                        <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
-                                            <HiOutlineIdentification className="w-4 h-4 text-slate-400" />
-                                            {selectedEmployee.id}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                {/* Filters and Search */}
+                <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
+                    <div className="flex items-center gap-4 w-full lg:w-auto">
+                        <div className="relative flex-1 lg:w-80">
+                            <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search by name, email, or ID..."
+                                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                         </div>
                     </div>
+
+                    <div className="flex items-center gap-3 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                            <option value="All">All Status</option>
+                            {EMPLOYEE_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+
+                        <select
+                            value={deptFilter}
+                            onChange={(e) => setDeptFilter(e.target.value)}
+                            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                            <option value="All">All Departments</option>
+                            {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                        </select>
+
+                        <div className="border-l border-slate-200 h-8 mx-1" />
+
+                        <div className="flex bg-slate-100 rounded-lg p-1">
+                            <button
+                                onClick={() => setViewMode('table')}
+                                className={cn(
+                                    'p-1.5 rounded-md transition-all',
+                                    viewMode === 'table' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'
+                                )}
+                            >
+                                <HiOutlineMenu className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={cn(
+                                    'p-1.5 rounded-md transition-all',
+                                    viewMode === 'grid' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'
+                                )}
+                            >
+                                <HiOutlineViewGrid className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Data Display */}
+                {viewMode === 'table' ? (
+                    <Table
+                        columns={columns}
+                        data={filteredEmployees}
+                        onRowClick={(row) => handleOpenDrawer('view', row)}
+                        pagination
+                        pageSize={10}
+                        sortable
+                    />
                 ) : (
-                    <form className="space-y-6">
-                        {/* Form Fields */}
-                        <div className="grid grid-cols-1 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Full Name <span className="text-red-500">*</span></label>
-                                <Controller
-                                    name="name"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <input
-                                            {...field}
-                                            className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            placeholder="John Doe"
-                                        />
-                                    )}
-                                />
-                                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
-                            </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {filteredEmployees.map((emp) => (
+                            <Card
+                                key={emp.id}
+                                hover
+                                onClick={() => handleOpenDrawer('view', emp)}
+                                className="group cursor-pointer"
+                            >
+                                <div className="flex flex-col items-center text-center p-2">
+                                    <Avatar name={emp.name} src={emp.avatar} size="xl" className="mb-4" />
+                                    <h3 className="text-lg font-bold text-slate-900">{emp.name}</h3>
+                                    <p className="text-sm text-slate-500 mb-2">{emp.designation}</p>
+                                    <Badge className="mb-4">{emp.status}</Badge>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Email Address <span className="text-red-500">*</span></label>
-                                    <Controller
-                                        name="email"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="email"
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="john@company.com"
-                                            />
-                                        )}
-                                    />
-                                    {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                                    <div className="w-full border-t border-slate-100 pt-4 flex flex-col gap-2 text-sm text-slate-600">
+                                        <div className="flex items-center justify-between w-full">
+                                            <span className="text-slate-400">Department</span>
+                                            <span className="font-medium">{emp.department}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between w-full">
+                                            <span className="text-slate-400">Joined</span>
+                                            <span className="font-medium">{formatDate(emp.joinDate)}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
-                                    <Controller
-                                        name="phone"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="+1 555-0000"
-                                            />
-                                        )}
-                                    />
-                                </div>
-                            </div>
+                            </Card>
+                        ))}
+                    </div>
+                )}
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Slide-over Drawer */}
+                <Drawer
+                    isOpen={drawerOpen}
+                    onClose={() => setDrawerOpen(false)}
+                    title={
+                        drawerMode === 'add' ? 'Add New Employee' :
+                            drawerMode === 'edit' ? 'Edit Employee' :
+                                'Employee Profile'
+                    }
+                    size="lg"
+                    footer={
+                        drawerMode === 'view' ? (
+                            <>
+                                <Button
+                                    variant="danger"
+                                    icon={HiOutlineTrash}
+                                    onClick={handleDelete}
+                                >
+                                    Remove Employee
+                                </Button>
+                                <Button
+                                    icon={HiOutlinePencil}
+                                    onClick={() => setDrawerMode('edit')}
+                                >
+                                    Edit Profile
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button variant="secondary" onClick={() => setDrawerOpen(false)}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleSubmit(onSubmit)}>
+                                    {drawerMode === 'add' ? 'Add Employee' : 'Save Changes'}
+                                </Button>
+                            </>
+                        )
+                    }
+                >
+                    {drawerMode === 'view' && selectedEmployee ? (
+                        <div className="space-y-8">
+                            {/* Header Info */}
+                            <div className="flex items-center gap-4">
+                                <Avatar name={selectedEmployee.name} src={selectedEmployee.avatar} size="2xl" />
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Department <span className="text-red-500">*</span></label>
-                                    <Controller
-                                        name="department"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <select
-                                                {...field}
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                                            >
-                                                <option value="">Select Department</option>
-                                                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
-                                            </select>
-                                        )}
-                                    />
-                                    {errors.department && <p className="mt-1 text-xs text-red-500">{errors.department.message}</p>}
+                                    <h3 className="text-xl font-bold text-slate-900">{selectedEmployee.name}</h3>
+                                    <p className="text-slate-500">{selectedEmployee.designation}</p>
+                                    <div className="mt-2 text-sm text-slate-400">{selectedEmployee.id}</div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Designation <span className="text-red-500">*</span></label>
-                                    <Controller
-                                        name="designation"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="Software Engineer"
-                                            />
-                                        )}
-                                    />
-                                    {errors.designation && <p className="mt-1 text-xs text-red-500">{errors.designation.message}</p>}
+                                <div className="ml-auto">
+                                    <Badge size="lg">{selectedEmployee.status}</Badge>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Status <span className="text-red-500">*</span></label>
-                                    <Controller
-                                        name="status"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <select
-                                                {...field}
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                                            >
-                                                {EMPLOYEE_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                                            </select>
-                                        )}
-                                    />
+                            {/* Profile Sections */}
+                            <div className="space-y-6">
+                                <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                    <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">
+                                        Contact Information
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs text-slate-500">Email Address</label>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
+                                                <HiOutlineMail className="w-4 h-4 text-slate-400" />
+                                                {selectedEmployee.email}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-xs text-slate-500">Phone Number</label>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
+                                                <HiOutlinePhone className="w-4 h-4 text-slate-400" />
+                                                {selectedEmployee.phone || '—'}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Joining Date <span className="text-red-500">*</span></label>
-                                    <Controller
-                                        name="joinDate"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <input
-                                                {...field}
-                                                type="date"
-                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
-                                        )}
-                                    />
-                                    {errors.joinDate && <p className="mt-1 text-xs text-red-500">{errors.joinDate.message}</p>}
+
+                                <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                    <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">
+                                        Employment Details
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs text-slate-500">Department</label>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
+                                                <HiOutlineOfficeBuilding className="w-4 h-4 text-slate-400" />
+                                                {selectedEmployee.department}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-xs text-slate-500">Joining Date</label>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
+                                                <HiOutlineCalendar className="w-4 h-4 text-slate-400" />
+                                                {formatDate(selectedEmployee.joinDate)}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-xs text-slate-500">Employee ID</label>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-700 font-medium">
+                                                <HiOutlineIdentification className="w-4 h-4 text-slate-400" />
+                                                {selectedEmployee.id}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                )}
-            </Drawer>
-        </div>
+                    ) : (
+                        <form className="space-y-6">
+                            {/* Form Fields */}
+                            <div className="grid grid-cols-1 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">Full Name <span className="text-red-500">*</span></label>
+                                    <Controller
+                                        name="name"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="John Doe"
+                                            />
+                                        )}
+                                    />
+                                    {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Email Address <span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="email"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="email"
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="john@company.com"
+                                                />
+                                            )}
+                                        />
+                                        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                                        <Controller
+                                            name="phone"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="+1 555-0000"
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Department <span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="department"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <select
+                                                    {...field}
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                                                >
+                                                    <option value="">Select Department</option>
+                                                    {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                                                </select>
+                                            )}
+                                        />
+                                        {errors.department && <p className="mt-1 text-xs text-red-500">{errors.department.message}</p>}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Designation <span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="designation"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="Software Engineer"
+                                                />
+                                            )}
+                                        />
+                                        {errors.designation && <p className="mt-1 text-xs text-red-500">{errors.designation.message}</p>}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Status <span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="status"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <select
+                                                    {...field}
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                                                >
+                                                    {EMPLOYEE_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                </select>
+                                            )}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">Joining Date <span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="joinDate"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="date"
+                                                    className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            )}
+                                        />
+                                        {errors.joinDate && <p className="mt-1 text-xs text-red-500">{errors.joinDate.message}</p>}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    )}
+                </Drawer>
+            </div>
+        </>
     );
 };
 
